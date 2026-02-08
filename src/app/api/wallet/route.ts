@@ -19,9 +19,17 @@ export async function GET(request: Request) {
       limit: 5,
     });
 
+	const scoring = scoreWallet({
+	  walletAgeDays: Math.floor(Math.random() * 100),
+	  totalTx: txs.data.length,
+	  txLastHour: Math.floor(Math.random() * 50),
+	  touchedPackages: ["0xdefi1"],
+	});
+
     return NextResponse.json({
       address,
       total: txs.data.length,
+	  score: scoring,
       transactions: txs.data,
     });
   } catch (err) {
@@ -30,4 +38,5 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
+  
 }
