@@ -55,11 +55,28 @@ export async function GET(request: Request) {
 
 	const touchedPackagesArray = Array.from(touchedPackages);
 	
+	
+	// Burst behaviour (muchas transacciones en poquisimo tiempo)
+	const ONE_HOUR = 60 * 60 * 1000;
+	const now = Date.now();
+
+	let txLastHour = 0;
+
+	for (const tx of txs.data) {
+	  const txTime = Number((tx as any)?.timestampMs || 0);
+
+	  if (txTime > now - ONE_HOUR) {
+		txLastHour++;
+	  }
+	}
+	
+	
+	
 	//Simulation
 	const scoring = scoreWallet({
 	  walletAgeDays, //: Math.floor(Math.random() * 100),
 	  totalTx: txs.data.length,
-	  txLastHour: Math.floor(Math.random() * 50),
+	  txLastHour, //: Math.floor(Math.random() * 50),
 	  touchedPackages: touchedPackagesArray, //: ["0xdefi1"],
 	});
 
