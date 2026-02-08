@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { suiClient } from "@/lib/suiClient";
+import { scoreWallet } from "@/lib/scoringEngine";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
