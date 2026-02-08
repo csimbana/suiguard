@@ -28,11 +28,20 @@ export default function Home() {
         Check
       </button>
 
+		{result?.score && (
+		  <h2>
+			Risk: {result.score.level} — {result.score.reason}
+		  </h2>
+		)}	  
+
+
       {result && (
         <pre style={{ marginTop: 20 }}>
           {JSON.stringify(result, null, 2)}
         </pre>
       )}
+	  
+	  
     </main>
   );
 }
