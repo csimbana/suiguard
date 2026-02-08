@@ -38,12 +38,29 @@ export async function GET(request: Request) {
 	  }
 	}
 	
+	// --- Extract touched packages ---
+	const touchedPackages = new Set<string>();
+
+	for (const tx of txs.data) {
+	  try {
+		const changes = (tx as any)?.objectChanges || [];
+
+		for (const change of changes) {
+		  if (change.packageId) {
+			touchedPackages.add(change.packageId);
+		  }
+		}
+	  } catch {}
+	}
+
+	const touchedPackagesArray = Array.from(touchedPackages);
+	
 	//Simulation
 	const scoring = scoreWallet({
 	  walletAgeDays, //: Math.floor(Math.random() * 100),
 	  totalTx: txs.data.length,
 	  txLastHour: Math.floor(Math.random() * 50),
-	  touchedPackages: ["0xdefi1"],
+	  touchedPackages: touchedPackagesArray, //: ["0xdefi1"],
 	});
 
     return NextResponse.json({

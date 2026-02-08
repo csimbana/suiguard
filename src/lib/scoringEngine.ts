@@ -1,13 +1,11 @@
 export type RiskLevel = "GREEN" | "AMBER" | "RED";
 
-const FLAGGED_PACKAGES = [
-  "0xscam123",
-  "0xexploit456",
+const FLAGGED_PACKAGES: string[] = [
+  // para reemplazar con incidentes públicos
 ];
 
-const VERIFIED_PACKAGES = [
-  "0xdefi1",
-  "0xdefi2",
+const VERIFIED_PACKAGES: string[] = [
+  // Ejemplos conocidos 
 ];
 
 export function scoreWallet(data: {
