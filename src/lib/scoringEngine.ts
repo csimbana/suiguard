@@ -13,8 +13,9 @@ export function scoreWallet(data: {
   totalTx: number;
   txLastHour: number;
   touchedPackages: string[];
+  uniquePackagesCount: number;
 }) {
-  //  RED CHEC
+  //  RED CHECK
   const touchedFlagged = data.touchedPackages.some(p =>
     FLAGGED_PACKAGES.includes(p)
   );
@@ -27,11 +28,15 @@ export function scoreWallet(data: {
   }
 
   //  AMBER CHECK
+	// Count unknown packages
+	const unknownPackages = data.touchedPackages.filter(
+	  p => !VERIFIED_PACKAGES.includes(p)
+	);
+
   if (
     data.walletAgeDays < 7 ||
     data.txLastHour > 20 ||
-    data.touchedPackages.some(p => !VERIFIED_PACKAGES.includes(p))
-  ) {
+	unknownPackages.length > 3) {
     return {
       level: "AMBER",
       reason: "New wallet or unusual activity",

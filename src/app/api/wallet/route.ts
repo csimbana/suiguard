@@ -54,6 +54,10 @@ export async function GET(request: Request) {
 	}
 
 	const touchedPackagesArray = Array.from(touchedPackages);
+
+	// --- Protocol profile (REAL signal) ---
+	const uniquePackagesCount = touchedPackagesArray.length;
+	
 	
 	
 	// Burst behaviour (muchas transacciones en poquisimo tiempo)
@@ -78,6 +82,7 @@ export async function GET(request: Request) {
 	  totalTx: txs.data.length,
 	  txLastHour, //: Math.floor(Math.random() * 50),
 	  touchedPackages: touchedPackagesArray, //: ["0xdefi1"],
+	  uniquePackagesCount,
 	});
 
     return NextResponse.json({
