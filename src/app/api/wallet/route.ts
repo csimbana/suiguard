@@ -16,16 +16,31 @@ export async function GET(request: Request) {
       filter: {
         FromAddress: address,
       },
-      limit: 5,
+      limit: 50,
     });
 
-	// Hackathon MVP 
-	// Randomized values are used only to simulate live risk scoring behavior.
-	// The architecture is ready to consume real Sui on-chain signals such as
-	// wallet history, transaction burst detection, and package/module reputation.
+	// --- Real signal: wallet age (days) ---
+	let walletAgeDays = 0;
 
+	if (txs.data.length > 0) {
+	  // Toma la transacción más antigua dentro del lote
+	  const sorted = [...txs.data].sort(
+		(a: any, b: any) =>
+		  Number(a.timestampMs ?? 0) - Number(b.timestampMs ?? 0)
+	  );
+
+	  const firstTx = sorted[0];
+	  const firstMs = Number(firstTx?.timestampMs ?? 0);
+
+	  if (firstMs > 0) {
+		const now = Date.now();
+		walletAgeDays = Math.floor((now - firstMs) / (1000 * 60 * 60 * 24)); //Calcula los días
+	  }
+	}
+	
+	//Simulation
 	const scoring = scoreWallet({
-	  walletAgeDays: Math.floor(Math.random() * 100),
+	  walletAgeDays, //: Math.floor(Math.random() * 100),
 	  totalTx: txs.data.length,
 	  txLastHour: Math.floor(Math.random() * 50),
 	  touchedPackages: ["0xdefi1"],
@@ -34,6 +49,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       address,
       total: txs.data.length,
+	  walletAgeDays,
 	  score: scoring,
       transactions: txs.data,
     });
