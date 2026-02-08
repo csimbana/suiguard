@@ -19,6 +19,11 @@ export async function GET(request: Request) {
       limit: 5,
     });
 
+	// Hackathon MVP 
+	// Randomized values are used only to simulate live risk scoring behavior.
+	// The architecture is ready to consume real Sui on-chain signals such as
+	// wallet history, transaction burst detection, and package/module reputation.
+
 	const scoring = scoreWallet({
 	  walletAgeDays: Math.floor(Math.random() * 100),
 	  totalTx: txs.data.length,
